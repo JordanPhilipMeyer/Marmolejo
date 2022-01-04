@@ -79,7 +79,6 @@ def main():
         for event in events:
             start = event['start'].get('dateTime', event['start'].get('date'))
             # function to ignore the regular blocked activities
-            print(start, event['summary'])
             if event["summary"] in to_ignore:
                 continue
             gid = event["id"]
@@ -88,7 +87,19 @@ def main():
                 d = event["description"]
             except:
                 d = None
-            rec = [gid, event["summary"], d, start_time, days_of_week[start_time.weekday()], None]
+            # print(start, event['summary'])
+
+            rec = [gid, event["summary"], d, start_time, days_of_week[start_time.weekday()]]
+            print(rec)
+            status = None
+            while status is None:
+                input_value = input('Did you complete this task? {y/n/i}')
+                try:
+                    if input_value in ["y", "n", "i"]:
+                        status = input_value
+                except ValueError:
+                    print('Not an acceptable value. Try y, n, or i.')
+            rec.append(status)
             event_log.append(rec)
 
 
