@@ -35,6 +35,7 @@ def main():
     Prints the start and name of the next 10 events on the user's calendar.
     """
     creds = None
+    format_save = []
     # The file token.json stores the user's access and refresh tokens, and is
     # created automatically when the authorization flow completes for the first
     # time.
@@ -54,18 +55,17 @@ def main():
 
     try:
         service = build('calendar', 'v3', credentials=creds)
-
-        month = 1
-        day = 3
-        year = 2022
-
+        year = datetime.datetime.now().year
+        month = datetime.datetime.now().month
+        day = datetime.datetime.now().day
 
         # now = datetime.datetime(2021,12,26).isoformat() + 'Z'
         maxtime = datetime.datetime(year,month,day).isoformat() + 'Z'
-        now = (datetime.datetime(year,month,day) - datetime.timedelta(days=8)).isoformat() + 'Z'
+        week_back = (datetime.datetime(year,month,day) - datetime.timedelta(days=8)).isoformat() + 'Z'
+        format_save.append(week_back)
 
         print('Getting a week of activity')
-        events_result = service.events().list(calendarId='primary', timeMin=now, timeMax = maxtime,
+        events_result = service.events().list(calendarId='primary', timeMin=week_back, timeMax = maxtime,
                                               singleEvents=True,
                                               orderBy='startTime').execute()
         events = events_result.get('items', [])
@@ -106,8 +106,17 @@ def main():
     except HttpError as error:
         print('An error occurred: %s' % error)
 
+    # format_save = str(year) + str(month) + str(day)
     df = pd.DataFrame(event_log, columns=["eventID", "eventName", "eventDescription", "eventDate", "eventDay", "complete"])
-    df.to_csv("logs/my_test.csv")
+    df.to_csv(f"logs/my_test_{format_save[0][:10]}.csv")
 
 if __name__ == '__main__':
     main()
+
+    #Generate a list of tasks that have been uncompleted over the last N weeks
+
+    #Write a function to update the calendar event to write to my calendar a new date
+
+    #schedule runs on linux
+
+    #future ideas in readme: model to predict whether an event will be completed
