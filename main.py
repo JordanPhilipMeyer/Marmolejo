@@ -113,7 +113,7 @@ def main():
 if __name__ == '__main__':
     main()
 
-    #Generate a list of tasks that have been uncompleted over the last N weeks
+    #Generate a list of tasks that have been incomplete over the last N weeks
 
     #Write a function to update the calendar event to write to my calendar a new date
 
