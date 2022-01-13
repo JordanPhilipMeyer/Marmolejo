@@ -10,3 +10,30 @@ You should have a credentials.json file that will be stored in the project direc
 `google event script`
 - Pip install from requirements
 - launch `main.py`
+
+## Target directory structure
+```
+├── credentials.json
+├── events_to_ignore.txt
+├── incomplete
+│   └── incomplete_tasks_2022-01-12.md
+├── logs
+│   ├── scraped_logs_list.txt
+│   ├── task_journal_2021-12-26.csv
+│   ├── task_journal_2021-12-28.csv
+│   └── task_journal_2022-01-04.csv
+├── main.py
+├── README.md
+├── requirements.txt
+├── task_util.py
+├── token.json
+└── venv
+```
+
+
+## Troubleshooting
+- May need to delete the file `incomplete_tasks_{date}.md` and `scraped_logs_list.txt` if errors crop up
+- Reset the credential json once a week.
+    - Reset the credential. Execute main, which should take you to a Google portal to verify identity.
+
+
