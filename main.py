@@ -11,6 +11,7 @@ from googleapiclient.errors import HttpError
 import pandas as pd
 from pathlib import Path
 import task_util #utility module that filters for incomplete tasks and appends them to a running list for later review
+import sqlite3
 
 # If modifying these scopes, delete the file token.json.
 SCOPES = ['https://www.googleapis.com/auth/calendar.readonly']
@@ -41,7 +42,6 @@ def main():
     month = datetime.datetime.now().month
     day = datetime.datetime.now().day
 
-    # now = datetime.datetime(2021,12,26).isoformat() + 'Z'
     maxtime = datetime.datetime(year, month, day).isoformat() + 'Z'
     week_back = (datetime.datetime(year, month, day) - datetime.timedelta(days=8)).isoformat() + 'Z'
     format_save.append(week_back)
@@ -91,7 +91,6 @@ def main():
                     d = event["description"]
                 except:
                     d = None
-                # print(start, event['summary'])
 
                 rec = [gid, event["summary"], d, start_time, days_of_week[start_time.weekday()]]
                 print(rec)
@@ -104,27 +103,27 @@ def main():
                     except ValueError:
                         print('Not an acceptable value. Try y, n, or i.')
                 rec.append(status)
+                rec.append(None) # will represent a modifier feature
                 event_log.append(rec)
-
 
         except HttpError as error:
             print('An error occurred: %s' % error)
 
         # format_save = str(year) + str(month) + str(day)
-        df = pd.DataFrame(event_log, columns=["eventID", "eventName", "eventDescription", "eventDate", "eventDay", "complete"])
-        df.to_csv(f"logs/task_journal_{format_save[0][:10]}.csv")
+        df = pd.DataFrame(event_log, columns=["eventID", "eventName", "eventDescription", "eventDate", "eventDay",
+                                              "complete", "updated"])
+        conn = sqlite3.connect("eventDB.db")
+        df_stored_in_sql = pd.read_sql("SELECT * FROM task_journal", conn)
+        df = pd.concat([df,df_stored_in_sql], axis=0).reset_index()
+        df = df.drop_duplicates(subset="eventID")
+
+        df.to_sql("task_journal", conn, if_exists="replace", index=False)
     else:
         print(f"task journal already exists for {format_save[0][:10]}")
 
-    task_util.launch_incomplete_task_compiler() #comb through task journal for incomplete items. add to global incompelte list.
-
 
 if __name__ == '__main__':
-    main()
-
-    #Update file store from csv to sqlite
-
-    #Write a function to update the calendar event to write to my calendar a new date
+    main() # updates event DB with prior week's google events
 
     #schedule runs on linux
 

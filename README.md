@@ -10,6 +10,26 @@ You should have a credentials.json file that will be stored in the project direc
 `google event script`
 - Pip install from requirements
 - launch `main.py`
+- Set up `events_to_ignore.txt`
+
+- Walkthrough using task_util functions: `read_all_incomplete_tasks`, `grab_random_set_of_tasks_to_update`
+
+## Database structure
+Create a sqlite database to store events. I'll name mine `eventDB.db`
+In the root of the project run: `sqlite3 eventDB.db`
+In the sqlite shell run: `.databases`. Should return something like: 
+`~/google event script/eventDB.db`
+
+Use a task journal template to structure the database. In an ipython terminal:
+```
+import pandas as pd
+import sqlite3
+df = pd.read_csv("logs/task_journal_2021-12-26.csv")
+conn = sqlite3.connect("eventDB.db")
+df.to_sql("task_journal", conn, if_exists="replace", index=False)
+```
+
+Event Id, Event Name, Event Description, Time scraped, complete?, Revision
 
 ## Target directory structure
 ```
