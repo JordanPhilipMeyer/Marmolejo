@@ -1,49 +1,48 @@
-# gcal_weekly_reviewer
-I use the calendar app like a task manager in a sense. I give all things a 
-block of time to complete the task. The goal of this app is to easily review my 
-week and evaluate what's complete and what might need to be revisited in the future.
+# Marmolejo
+I use the calendar app like a task manager in a sense. I give all my tasks a block on time in Google Calendar.  With Marmolejo, users can easily review events over their week in Google calendar and evaluate its status. Track tasks that are incomplete and need to be scheduled with time in the future. In the future, users may be able to predict the likelihood of completing an event based on event description, time of day, and history of completion. 
 
 ## Steps to get set up:
 - `git clone <url>`
-- `pip install -r requirements.txt`
-- Get credentials from Google api. Include links and documentation. 
-You should have a credentials.json file that will be stored in the project directory
-`google event script`
-You will be prompted to give your app acces to your Google account. 
-- In the project root, add a text file called `events_to_ignore.txt`. On a new line, add the name of any google events 
-that you want to skip over. 
-- launch `main.py`
 
-- Walkthrough using task_util functions: `read_all_incomplete_tasks`, `grab_random_set_of_tasks_to_update`
+- `pip install -r requirements.txt`
+
+- Get credentials from Google api. See Google's developer documentation on [access credentials](https://developers.google.com/workspace/guides/create-credentials) for their API. OAuth credentials should work for most people with a Google account trying to launch this app locally. 
+
+  ![image-20220119205105000](/home/jordan/.config/Typora/typora-user-images/image-20220119205105000.png)
+
+- Once completed, you should see an action to download a json with your credentials. Rename this file `credentials.json` and store it in your project directory. When you run `main.py` later, you will be prompted to give your app access to your Google account through a browser.
+
+- If there are any events you want your tracker to skip over, write these event names on a new line in the file
+  `events_to_ignore.txt`. I find this useful to skip over blocks in my calendar for morning and evening routines.
+
+- In the terminal, run `python init_db.py`
+
+- In the terminal, run `python main.py`
+
+- Walk through using `task_util.py` functions: `read_all_incomplete_tasks`, `grab_random_set_of_tasks_to_update`
 
 ## Database structure
-Create a sqlite database to store events. I'll name mine `eventDB.db`
-In the root of the project run: `sqlite3 eventDB.db`
-In the sqlite shell run: `.databases`. Should return something like: 
-`~/google event script/eventDB.db`
+In our event database, we have a task journal table. This logs all our unique events. See the data dictionary below:
 
-Use a task journal template to structure the database. In an ipython terminal:
-```
-import pandas as pd
-import sqlite3
-df = pd.read_csv("logs/task_journal_2021-12-26.csv")
-conn = sqlite3.connect("eventDB.db")
-df.to_sql("task_journal", conn, if_exists="replace", index=False)
-```
-
-Event Id, Event Name, Event Description, Time scraped, complete?, Revision
+| Element          | Description                                                  |
+| ---------------- | ------------------------------------------------------------ |
+| eventID          | Google event ID tag. See Google API docs                     |
+| eventName        | Name of Google event                                         |
+| eventDescription | Content stored in the notes section of a google event        |
+| eventDate        | full time stamp of the event                                 |
+| eventDay         | day of the week of the event                                 |
+| complete         | indicates whether the event was completed on first review (y- yes / n- no / i- ignore ) |
+| updated          | indicates whether the event was completed at a later time or ready to be removed from the curator of missed events |
 
 ## Target directory structure
+
 ```
 ├── credentials.json
+├── eventDB.db
 ├── events_to_ignore.txt
-├── incomplete
-│   └── incomplete_tasks_2022-01-12.md
+├── init_db.py
 ├── logs
-│   ├── scraped_logs_list.txt
-│   ├── task_journal_2021-12-26.csv
-│   ├── task_journal_2021-12-28.csv
-│   └── task_journal_2022-01-04.csv
+│   └── task_journal_2021-12-26.csv
 ├── main.py
 ├── README.md
 ├── requirements.txt
@@ -54,8 +53,6 @@ Event Id, Event Name, Event Description, Time scraped, complete?, Revision
 
 
 ## Troubleshooting
-- May need to delete the file `incomplete_tasks_{date}.md` and `scraped_logs_list.txt` if errors crop up
-- Reset the credential json once a week.
+- Reset the credential json once a week. At the time of development, a token usually provides access to the Google API for a week.
     - Reset the credential. Execute main, which should take you to a Google portal to verify identity.
-
 
