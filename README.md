@@ -4,13 +4,15 @@ block of time to complete the task. The goal of this app is to easily review my
 week and evaluate what's complete and what might need to be revisited in the future.
 
 ## Steps to get set up:
-- Create a directory called `logs` This will be the save location for our weekly review.
-- Get credentials from Google api. Include links and documetnation. 
+- `git clone <url>`
+- `pip install -r requirements.txt`
+- Get credentials from Google api. Include links and documentation. 
 You should have a credentials.json file that will be stored in the project directory
 `google event script`
-- Pip install from requirements
+You will be prompted to give your app acces to your Google account. 
+- In the project root, add a text file called `events_to_ignore.txt`. On a new line, add the name of any google events 
+that you want to skip over. 
 - launch `main.py`
-- Set up `events_to_ignore.txt`
 
 - Walkthrough using task_util functions: `read_all_incomplete_tasks`, `grab_random_set_of_tasks_to_update`
 
