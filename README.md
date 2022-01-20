@@ -8,7 +8,7 @@ I use the calendar app like a task manager in a sense. I give all my tasks a blo
 
 - Get credentials from Google api. See Google's developer documentation on [access credentials](https://developers.google.com/workspace/guides/create-credentials) for their API. OAuth credentials should work for most people with a Google account trying to launch this app locally. 
 
-  ![image-20220119205105000](/home/jordan/.config/Typora/typora-user-images/image-20220119205105000.png)
+![OAuth Screenshot](images/googleoauth_screenshot.png)
 
 - Once completed, you should see an action to download a json with your credentials. Rename this file `credentials.json` and store it in your project directory. When you run `main.py` later, you will be prompted to give your app access to your Google account through a browser.
 
@@ -55,4 +55,3 @@ In our event database, we have a task journal table. This logs all our unique ev
 ## Troubleshooting
 - Reset the credential json once a week. At the time of development, a token usually provides access to the Google API for a week.
     - Reset the credential. Execute main, which should take you to a Google portal to verify identity.
-
